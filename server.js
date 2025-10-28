@@ -12,10 +12,6 @@ import { upload } from "./src/storage/cloudinary.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Ensure uploads folder exists
-const uploadsDir = join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
-
 const app = express();
 app.use(cors());
 app.use(express.json());
