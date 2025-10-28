@@ -6,8 +6,7 @@ import { fileURLToPath } from "url";
 import { submissions } from "./src/database/schema.js";
 import { db } from "./src/database/db.js";
 import { eq } from "drizzle-orm";
-import { upload } from "./src/storage/cloudinary.js";
-import { v2 as cloudinary } from "cloudinary";
+import { cloudinary, upload } from "./src/storage/cloudinary.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,13 +19,6 @@ const asyncHandler = (fn) => (req, res, next) =>
 
 // Admin middleware placeholder
 const adminAuth = (req, res, next) => next();
-
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // ----------------- Routes -----------------
 
@@ -88,13 +80,11 @@ app.get(
   adminAuth,
   asyncHandler(async (req, res) => {
     const allSubs = await db.select().from(submissions);
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "All submissions retrieved",
-        data: allSubs,
-      });
+    res.status(200).json({
+      success: true,
+      message: "All submissions retrieved",
+      data: allSubs,
+    });
   })
 );
 
@@ -156,13 +146,11 @@ app.delete(
     // Delete from database
     await db.delete(submissions).where(eq(submissions.id, id));
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Submission deleted successfully",
-        data: submission,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Submission deleted successfully",
+      data: submission,
+    });
   })
 );
 
