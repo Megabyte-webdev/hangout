@@ -54,7 +54,7 @@ app.post("/submit", upload.single("screenshot"), async (req, res) => {
     const existing = await db
       .select()
       .from(submissions)
-      .where(submissions.phone.eq(phone))
+      .where(eq(submissions.phone, phone))
       .limit(1);
 
     if (existing.length > 0) {
