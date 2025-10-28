@@ -529,6 +529,7 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        import { BASE_URL } from './config.js';
         // DOM Elements
         const submissionsTableBody = document.getElementById('submissionsTableBody');
         const tableLoader = document.getElementById('tableLoader');
@@ -567,7 +568,7 @@
             showLoader();
 
             try {
-                const res = await fetch('http://localhost:3000/submissions'); // your backend endpoint
+                const res = await fetch('${BASE_URL}/submissions'); // your backend endpoint
                 const data = await res.json();
 
                 if (data.success) {
@@ -699,7 +700,7 @@
             `;
 
             // Show screenshot preview
-            screenshotPreview.src = `/uploads/${submission.screenshot}`;
+            screenshotPreview.src = `${submission.screenshot}`;
             screenshotPreview.style.display = 'block';
 
             verificationModal.style.display = 'flex';
@@ -717,17 +718,18 @@
             if (!currentSubmissionId) return;
 
             try {
-                // In a real application, you would make an API call
-                // const res = await fetch(`/verify/${currentSubmissionId}`, { method: 'POST' });
-                // const data = await res.json();
+                // Make a real API call to verify the payment
+                const res = await fetch(`${BASE_URL}/verify/${currentSubmissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // add Authorization header here if needed
+                    }
+                });
 
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 800));
+                const data = await res.json();
 
-                // Mock successful response
-                const mockResponse = { success: true, message: 'Payment verified successfully' };
-
-                if (mockResponse.success) {
+                if (data.success) {
                     // Update local state
                     const submissionIndex = submissions.findIndex(sub => sub.id === currentSubmissionId);
                     if (submissionIndex !== -1) {
@@ -738,15 +740,16 @@
                     renderSubmissions(submissions);
                     updateStats(submissions);
                     closeVerificationModal();
-                    showToast(mockResponse.message, 'success');
+                    showToast('Payment verified successfully', 'success');
                 } else {
-                    showToast('Failed to verify payment', 'error');
+                    showToast(data.message || 'Failed to verify payment', 'error');
                 }
             } catch (error) {
                 console.error('Error verifying submission:', error);
                 showToast('Error verifying payment', 'error');
             }
         }
+
 
         // Delete a submission
         async function deleteSubmission(id) {
