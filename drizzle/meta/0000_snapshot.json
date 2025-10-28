@@ -1,5 +1,5 @@
 {
-  "id": "3a81627f-b357-40c3-b3ee-782c1e20761c",
+  "id": "4f460ebd-aa53-4005-9d72-ff4e1bbfa24b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -22,12 +22,18 @@
         },
         "phone": {
           "name": "phone",
-          "type": "varchar(14)",
+          "type": "varchar(25)",
           "primaryKey": false,
           "notNull": true
         },
         "screenshot": {
           "name": "screenshot",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "screenshot_public_id": {
+          "name": "screenshot_public_id",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
