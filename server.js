@@ -7,6 +7,7 @@ import fs from "fs";
 import { submissions } from "./src/database/schema.js";
 import { db } from "./src/database/db.js";
 import { eq } from "drizzle-orm";
+import { upload } from "./src/storage/cloudinary.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,15 +20,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(uploadsDir));
-
-// Multer setup
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadsDir),
-  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`),
-});
-const upload = multer({ storage });
-
-// Async handler
+r;
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -50,9 +43,9 @@ const findStudentByEmail = async (phone) => {
 app.post("/submit", upload.single("screenshot"), async (req, res) => {
   try {
     let { name, phone } = req.body;
-    const screenshot = req.file?.filename;
+    const screenshotUrl = req.file?.path; // Cloudinary returns URL in `path`
 
-    if (!name || !phone || !screenshot) {
+    if (!name || !phone || !screenshotUrl) {
       return res.status(400).json({
         success: false,
         message:
@@ -60,7 +53,7 @@ app.post("/submit", upload.single("screenshot"), async (req, res) => {
       });
     }
 
-    // Remove spaces but keep '+' and truncate to max 14 characters
+    // Format phone: remove spaces but keep '+' and truncate max 14
     phone = phone.replace(/\s+/g, "").slice(0, 14);
 
     // Check if phone already exists
@@ -78,10 +71,10 @@ app.post("/submit", upload.single("screenshot"), async (req, res) => {
       });
     }
 
-    // Insert submission
+    // Insert submission with Cloudinary URL
     const [inserted] = await db
       .insert(submissions)
-      .values({ name, phone, screenshot })
+      .values({ name, phone, screenshot: screenshotUrl })
       .returning();
 
     return res.status(201).json({
