@@ -752,34 +752,36 @@
 
 
         // Delete a submission
+        // Delete a submission
         async function deleteSubmission(id) {
             try {
-                // In a real application, you would make an API call
-                // const res = await fetch(`/delete/${id}`, { method: 'DELETE' });
-                // const data = await res.json();
+                const res = await fetch(`${BASE_URL}/submissions/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                        // Add Authorization header if your backend requires it
+                    }
+                });
 
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 800));
+                const data = await res.json();
 
-                // Mock successful response
-                const mockResponse = { success: true, message: 'Submission deleted successfully' };
-
-                if (mockResponse.success) {
+                if (data.success) {
                     // Update local state
                     submissions = submissions.filter(sub => sub.id !== id);
 
                     // Update UI
                     renderSubmissions(submissions);
                     updateStats(submissions);
-                    showToast(mockResponse.message, 'success');
+                    showToast(data.message, 'success');
                 } else {
-                    showToast('Failed to delete submission', 'error');
+                    showToast(data.message || 'Failed to delete submission', 'error');
                 }
             } catch (error) {
                 console.error('Error deleting submission:', error);
                 showToast('Error deleting submission', 'error');
             }
         }
+
 
         // Show loader
         function showLoader() {
