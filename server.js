@@ -15,8 +15,6 @@ const __dirname = dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(uploadsDir));
-r;
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
