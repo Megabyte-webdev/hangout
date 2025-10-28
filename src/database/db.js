@@ -4,6 +4,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
 // ✅ function to test DB connection

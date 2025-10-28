@@ -1,0 +1,1 @@
+ALTER TABLE "submissions" ALTER COLUMN "phone" SET DATA TYPE varchar(25);
