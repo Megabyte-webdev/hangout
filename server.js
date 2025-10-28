@@ -47,10 +47,8 @@ const findStudentByEmail = async (phone) => {
 // ----------------- Routes -----------------
 
 // User payment submission
-app.post(
-  "/submit",
-  upload.single("screenshot"),
-  asyncHandler(async (req, res) => {
+app.post("/submit", upload.single("screenshot"), async (req, res) => {
+  try {
     let { name, phone } = req.body;
     const screenshot = req.file?.filename;
 
@@ -62,12 +60,17 @@ app.post(
       });
     }
 
-    // Format phone: remove all spaces but keep '+'
-    phone = phone.replace(/\s+/g, "");
+    // Remove spaces but keep '+' and truncate to max 14 characters
+    phone = phone.replace(/\s+/g, "").slice(0, 14);
 
-    // Check for existing phone
-    const existing = await findStudentByEmail(phone);
-    if (existing) {
+    // Check if phone already exists
+    const existing = await db
+      .select()
+      .from(submissions)
+      .where(submissions.phone.eq(phone))
+      .limit(1);
+
+    if (existing.length > 0) {
       return res.status(400).json({
         success: false,
         message:
@@ -75,18 +78,26 @@ app.post(
       });
     }
 
+    // Insert submission
     const [inserted] = await db
       .insert(submissions)
       .values({ name, phone, screenshot })
       .returning();
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Your payment has been successfully submitted.",
       data: inserted,
     });
-  })
-);
+  } catch (error) {
+    console.error("Error submitting payment:", error);
+    return res.status(500).json({
+      success: false,
+      message: "A server error occurred while submitting your payment.",
+      error: error.message,
+    });
+  }
+});
 
 // Admin: get all submissions
 app.get(
