@@ -568,7 +568,7 @@
             showLoader();
 
             try {
-                const res = await fetch('${BASE_URL}/submissions'); // your backend endpoint
+                const res = await fetch(`${BASE_URL}/submissions`); // your backend endpoint
                 const data = await res.json();
 
                 if (data.success) {
