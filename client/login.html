@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FYB Hangout Admin Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #2d3436, #000);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            margin-bottom: 1.2rem;
+            font-size: 1.8rem;
+        }
+
+        .login-container p {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #00e676;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #00c853;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff5252;
+            margin-top: 1rem;
+            border-radius: 8px;
+            padding: 0.75rem;
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h1><i class="fas fa-lock"></i> Admin Login</h1>
+        <p>Enter your admin credentials to access the dashboard</p>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter admin username" required />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password" required />
+            </div>
+            <button type="submit" class="btn" id="loginBtn">Login</button>
+            <div id="errorMsg" class="error"></div>
+        </form>
+    </div>
+
+    <script>
+        const BASE_URL = window.location.origin;
+
+        window.addEventListener("DOMContentLoaded", async () => {
+            const loginContainer = document.querySelector(".login-container");
+            const errorMsg = document.getElementById("errorMsg");
+            const loginForm = document.getElementById("adminLoginForm");
+            const loginBtn = document.getElementById("loginBtn");
+
+            // Hide container until session check
+            loginContainer.style.display = "none";
+
+            // 1️⃣ Check if already logged in
+            try {
+                const res = await fetch(`${BASE_URL}/admin/session`, { credentials: "include" });
+                const data = await res.json();
+
+                if (data.loggedIn) {
+                    window.location.replace("admin.html");
+                    return;
+                }
+            } catch (err) {
+                console.warn("Session check failed:", err);
+            } finally {
+                loginContainer.style.display = "block";
+            }
+
+            // 2️⃣ Handle form submit
+            loginForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                errorMsg.style.display = "none";
+                loginBtn.disabled = true;
+                loginBtn.textContent = "Logging in...";
+
+                const username = document.getElementById("username").value.trim();
+                const password = document.getElementById("password").value.trim();
+
+                try {
+                    const res = await fetch(`${BASE_URL}/admin/login`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ username, password }),
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok && data.success) {
+                        window.location.replace("admin.html");
+                    } else {
+                        errorMsg.textContent = data.message || "Invalid credentials";
+                        errorMsg.style.display = "block";
+                    }
+                } catch (err) {
+                    console.error(err);
+                    errorMsg.textContent = "Server error, please try again";
+                    errorMsg.style.display = "block";
+                } finally {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = "Login";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

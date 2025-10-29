@@ -1,5 +1,5 @@
 {
-  "id": "4f460ebd-aa53-4005-9d72-ff4e1bbfa24b",
+  "id": "87dac330-d967-431b-a62b-499f2a830945",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -38,12 +38,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "verified": {
-          "name": "verified",
-          "type": "boolean",
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": false,
-          "default": false
+          "default": "'pending'"
         }
       },
       "indexes": {},

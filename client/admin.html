@@ -2,810 +2,182 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FYB Hangout Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="./admin.css" />
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --success: #4caf50;
-            --warning: #ff9800;
-            --error: #f44336;
-            --gray-light: #f8f9fa;
-            --gray: #6c757d;
-            --gray-dark: #343a40;
-            --border-radius: 8px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            color: var(--gray-dark);
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .header h1 {
-            color: var(--primary);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header h1 i {
-            font-size: 28px;
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .stat-card h3 {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-card .value {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-card.total .value {
-            color: var(--primary);
-        }
-
-        .stat-card.verified .value {
-            color: var(--success);
-        }
-
-        .stat-card.pending .value {
-            color: var(--warning);
-        }
-
-        .card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .card-header h2 {
-            color: var(--primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-box {
-            position: relative;
-        }
-
-        .search-box input {
-            padding: 10px 15px 10px 40px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            width: 250px;
-            font-size: 14px;
-            transition: var(--transition);
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-
-        .filter-select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            background: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        thead {
-            background-color: var(--gray-light);
-        }
-
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--gray-dark);
-            border-bottom: 2px solid #dee2e6;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        tbody tr {
-            transition: var(--transition);
-        }
-
-        tbody tr:hover {
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-
-        .status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status.verified {
-            background-color: rgba(76, 175, 80, 0.1);
-            color: var(--success);
-        }
-
-        .status.pending {
-            background-color: rgba(255, 152, 0, 0.1);
-            color: var(--warning);
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .action-cell {
-            display: flex;
-            gap: 8px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 15px;
-            color: #ddd;
-        }
-
-        .empty-state p {
-            font-size: 18px;
-        }
-
-        .modal {
-            display: none;
+        /* --- Loading Overlay --- */
+        #loadingScreen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
+            inset: 0;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            background-color: #000;
+            color: #00e676;
+            font-size: 1.2rem;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
         }
 
-        .modal-content {
-            background: white;
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        #loadingScreen.fade-out {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .modal-header h3 {
-            color: var(--primary);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-
-        .modal-body {
-            margin-bottom: 25px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #ddd;
-            color: var(--gray-dark);
-        }
-
-        .btn-outline:hover {
-            background-color: #f8f9fa;
-        }
-
-        .screenshot-preview {
-            max-width: 100%;
-            border-radius: var(--border-radius);
-            margin-top: 15px;
+        #app {
             display: none;
         }
 
-        .loader {
-            display: none;
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid #00e676;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(67, 97, 238, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin-bottom: 12px;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
-            to {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
                 transform: rotate(360deg);
-            }
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1100;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        .toast.success {
-            background-color: var(--success);
-        }
-
-        .toast.error {
-            background-color: var(--error);
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .stats-container {
-                grid-template-columns: 1fr;
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .controls {
-                width: 100%;
-                flex-direction: column;
-            }
-
-            .search-box input {
-                width: 100%;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .action-cell {
-                flex-direction: column;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1><i class="fas fa-money-check-alt"></i> FYB Hangout Payment Submissions</h1>
-            <div class="user-info">
-                <span>Welcome, Admin</span>
-            </div>
-        </div>
+    <!-- Loading screen -->
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        Checking session...
+    </div>
 
-        <div class="stats-container">
-            <div class="stat-card total">
-                <h3>Total Submissions</h3>
-                <div class="value" id="totalCount">0</div>
-                <p>All payment submissions</p>
+    <!-- Protected UI -->
+    <div id="app">
+        <!-- Top Navbar / Page Header -->
+        <header class="main-header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>FYB Hangout Admin</span>
             </div>
-            <div class="stat-card verified">
-                <h3>Verified</h3>
-                <div class="value" id="verifiedCount">0</div>
-                <p>Successfully verified</p>
-            </div>
-            <div class="stat-card pending">
-                <h3>Pending</h3>
-                <div class="value" id="pendingCount">0</div>
-                <p>Awaiting verification</p>
-            </div>
-        </div>
+            <nav class="nav-links">
+                <a href="" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#tableWrapper"><i class="fas fa-users"></i> Submissions</a>
+                <a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </header>
 
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-list"></i> Payment Submissions</h2>
-                <div class="controls">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search submissions...">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="header">
+                <h1><i class="fas fa-money-check-alt"></i> FYB Hangout Payment Dashboard</h1>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Welcome, Admin</span>
+                </div>
+            </div>
+
+            <!-- Statistics Section -->
+            <h2 class="section-title"><i class="fas fa-chart-pie"></i> Overview</h2>
+            <div class="stats-container">
+                <div class="stat-card total">
+                    <h3>Total Submissions</h3>
+                    <div class="value" id="totalCount">0</div>
+                    <p>All payment submissions received</p>
+                </div>
+                <div class="stat-card verified">
+                    <h3>Verified Payments</h3>
+                    <div class="value" id="verifiedCount">0</div>
+                    <p>Successfully verified payments</p>
+                </div>
+                <div class="stat-card pending">
+                    <h3>Pending Review</h3>
+                    <div class="value" id="pendingCount">0</div>
+                    <p>Awaiting verification</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Checked In</h3>
+                    <div class="value" id="checkedInCount">0</div>
+                    <p>Participants who checked in</p>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <h2 class="section-title"><i class="fas fa-list"></i> Payment Submissions</h2>
+            <div class="card">
+                <div class="card-header">
+                    <div class="controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by name, phone, or ID..." />
+                        </div>
+                        <select id="statusFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="verified">Verified</option>
+                            <option value="checked_in">Checked In</option>
+                        </select>
                     </div>
-                    <select class="filter-select" id="statusFilter">
-                        <option value="all">All Statuses</option>
-                        <option value="verified">Verified</option>
-                        <option value="pending">Pending</option>
-                    </select>
+                </div>
+
+                <div class="loader" id="tableLoader"></div>
+
+                <div id="tableWrapper">
+                    <table id="submissionsTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Student Name</th>
+                                <th>Phone Number</th>
+                                <th>Screenshot</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-inbox"></i>
+                    <p>No payment submissions found</p>
                 </div>
             </div>
-
-            <div class="loader" id="tableLoader"></div>
-
-            <table id="submissionsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Screenshot</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="submissionsTableBody">
-                    <!-- Data will be populated by JavaScript -->
-                </tbody>
-            </table>
-
-            <div class="empty-state" id="emptyState">
-                <i class="fas fa-inbox"></i>
-                <p>No payment submissions found</p>
-            </div>
         </div>
-    </div>
 
-    <!-- Verification Modal -->
-    <div class="modal" id="verificationModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Verify Payment</h3>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to verify this payment submission?</p>
-                <div id="submissionDetails">
-                    <!-- Submission details will be populated here -->
+        <!-- Verification Modal -->
+        <div class="modal" id="verificationModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Verify Payment Submission</h3>
+                    <button class="close-btn" id="closeModal">&times;</button>
                 </div>
-                <img id="screenshotPreview" height="100" class="screenshot-preview" alt="Screenshot Preview">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-outline" id="cancelVerification">Cancel</button>
-                <button class="btn btn-success" id="confirmVerification">Verify Payment</button>
+                <div class="modal-body">
+                    <p>Are you sure you want to verify this payment submission?</p>
+                    <div id="submissionDetails"></div>
+                    <img id="screenshotPreview" height="100" class="screenshot-preview" alt="Payment Screenshot" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="cancelVerification">Cancel</button>
+                    <button class="btn btn-success" id="confirmVerification">Verify Payment</button>
+                </div>
             </div>
         </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast"></div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-
-    <script>
-        const BASE_URL = "https://studenthangout.vercel.app";
-        // DOM Elements
-        const submissionsTableBody = document.getElementById('submissionsTableBody');
-        const tableLoader = document.getElementById('tableLoader');
-        const emptyState = document.getElementById('emptyState');
-        const searchInput = document.getElementById('searchInput');
-        const statusFilter = document.getElementById('statusFilter');
-        const verificationModal = document.getElementById('verificationModal');
-        const closeModal = document.getElementById('closeModal');
-        const cancelVerification = document.getElementById('cancelVerification');
-        const confirmVerification = document.getElementById('confirmVerification');
-        const submissionDetails = document.getElementById('submissionDetails');
-        const screenshotPreview = document.getElementById('screenshotPreview');
-        const toast = document.getElementById('toast');
-        const totalCount = document.getElementById('totalCount');
-        const verifiedCount = document.getElementById('verifiedCount');
-        const pendingCount = document.getElementById('pendingCount');
-
-        // State
-        let submissions = [];
-        let currentSubmissionId = null;
-
-        // Initialize the dashboard
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchSubmissions();
-
-            // Event listeners
-            searchInput.addEventListener('input', filterSubmissions);
-            statusFilter.addEventListener('change', filterSubmissions);
-            closeModal.addEventListener('click', closeVerificationModal);
-            cancelVerification.addEventListener('click', closeVerificationModal);
-            confirmVerification.addEventListener('click', verifySubmission);
-        });
-
-        // Fetch submissions from the server
-        async function fetchSubmissions() {
-            showLoader();
-
-            try {
-                const res = await fetch(`${BASE_URL}/submissions`); // your backend endpoint
-                const data = await res.json();
-
-                if (data.success) {
-                    submissions = data.data;
-                    renderSubmissions(submissions);
-                    updateStats(submissions);
-                } else {
-                    showToast('Failed to fetch submissions', 'error');
-                }
-            } catch (error) {
-                console.error('Error fetching submissions:', error);
-                showToast('Error fetching submissions', 'error');
-            } finally {
-                hideLoader();
-            }
-        }
-
-
-        // Render submissions in the table
-        function renderSubmissions(data) {
-            if (data.length === 0) {
-                submissionsTableBody.innerHTML = '';
-                emptyState.style.display = 'block';
-                return;
-            }
-
-            emptyState.style.display = 'none';
-
-            submissionsTableBody.innerHTML = data.map(sub => `
-                <tr>
-                    <td>${sub.id}</td>
-                    <td>${sub.name}</td>
-                    <td>${sub.phone}</td>
-                    <td>
-                        <button class="btn btn-outline view-screenshot" data-src="${sub.screenshot}">
-                            <i class="fas fa-eye"></i> View
-                        </button>
-                    </td>
-                    <td>
-                        <span class="status ${sub.verified ? 'verified' : 'pending'}">
-                            ${sub.verified ? 'Verified' : 'Pending'}
-                        </span>
-                    </td>
-                    <td class="action-cell">
-                        ${sub.verified ?
-                    '<button class="btn btn-success" disabled><i class="fas fa-check"></i> Verified</button>' :
-                    `<button class="btn btn-primary verify-btn" data-id="${sub.id}">
-                                <i class="fas fa-check-circle"></i> Verify
-                            </button>`
-                }
-                        <button class="btn btn-outline delete-btn" data-id="${sub.id}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Add event listeners to buttons
-            document.querySelectorAll('.verify-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    openVerificationModal(parseInt(this.getAttribute('data-id')));
-                });
-            });
-
-            document.querySelectorAll('.view-screenshot').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const src = this.getAttribute('data-src');
-                    window.open(src, '_blank');
-                });
-            });
-
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    if (confirm('Are you sure you want to delete this submission?')) {
-                        deleteSubmission(id);
-                    }
-                });
-            });
-        }
-
-        // Filter submissions based on search and status
-        function filterSubmissions() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const status = statusFilter.value;
-
-            let filtered = submissions;
-
-            // Filter by search term
-            if (searchTerm) {
-                filtered = filtered.filter(sub =>
-                    sub.name.toLowerCase().includes(searchTerm) ||
-                    sub.phone.toLowerCase().includes(searchTerm)
-                );
-            }
-
-            // Filter by status
-            if (status !== 'all') {
-                filtered = filtered.filter(sub =>
-                    (status === 'verified' && sub.verified) ||
-                    (status === 'pending' && !sub.verified)
-                );
-            }
-
-            renderSubmissions(filtered);
-            updateStats(filtered);
-        }
-
-        // Update statistics cards
-        function updateStats(data) {
-            const total = data.length;
-            const verified = data.filter(sub => sub.verified).length;
-            const pending = total - verified;
-
-            totalCount.textContent = total;
-            verifiedCount.textContent = verified;
-            pendingCount.textContent = pending;
-        }
-
-        // Open verification modal
-        function openVerificationModal(id) {
-            const submission = submissions.find(sub => sub.id === id);
-            if (!submission) return;
-
-            currentSubmissionId = id;
-            submissionDetails.innerHTML = `
-                <p><strong>Name:</strong> ${submission.name}</p>
-                <p><strong>Phone:</strong> ${submission.phone}</p>
-            `;
-
-            // Show screenshot preview
-            screenshotPreview.src = `${submission.screenshot}`;
-            screenshotPreview.style.display = 'block';
-
-            verificationModal.style.display = 'flex';
-        }
-
-        // Close verification modal
-        function closeVerificationModal() {
-            verificationModal.style.display = 'none';
-            currentSubmissionId = null;
-            screenshotPreview.style.display = 'none';
-        }
-
-        // Verify a submission
-        async function verifySubmission() {
-            if (!currentSubmissionId) return;
-
-            try {
-                // Make a real API call to verify the payment
-                const res = await fetch(`${BASE_URL}/verify/${currentSubmissionId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                        // add Authorization header here if needed
-                    }
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    // Update local state
-                    const submissionIndex = submissions.findIndex(sub => sub.id === currentSubmissionId);
-                    if (submissionIndex !== -1) {
-                        submissions[submissionIndex].verified = true;
-                    }
-
-                    // Update UI
-                    renderSubmissions(submissions);
-                    updateStats(submissions);
-                    closeVerificationModal();
-                    showToast('Payment verified successfully', 'success');
-                } else {
-                    showToast(data.message || 'Failed to verify payment', 'error');
-                }
-            } catch (error) {
-                console.error('Error verifying submission:', error);
-                showToast('Error verifying payment', 'error');
-            }
-        }
-
-
-        // Delete a submission
-        // Delete a submission
-        async function deleteSubmission(id) {
-            try {
-                const res = await fetch(`${BASE_URL}/submissions/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                        // Add Authorization header if your backend requires it
-                    }
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    // Update local state
-                    submissions = submissions.filter(sub => sub.id !== id);
-
-                    // Update UI
-                    renderSubmissions(submissions);
-                    updateStats(submissions);
-                    showToast(data.message, 'success');
-                } else {
-                    showToast(data.message || 'Failed to delete submission', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting submission:', error);
-                showToast('Error deleting submission', 'error');
-            }
-        }
-
-
-        // Show loader
-        function showLoader() {
-            tableLoader.style.display = 'block';
-            submissionsTableBody.innerHTML = '';
-            emptyState.style.display = 'none';
-        }
-
-        // Hide loader
-        function hideLoader() {
-            tableLoader.style.display = 'none';
-        }
-
-        // Show toast notification
-        function showToast(message, type) {
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.style.display = 'flex';
-
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-    </script>
+    <script src="./script.js"></script>
 </body>
 
 </html>
